@@ -1,0 +1,57 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongo-db
+  name: mongo-db
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: mongo-db
+  strategy:
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.network/openshift-microservices-wk-net: "true"
+        io.kompose.service: mongo-db
+    spec:
+      containers:
+        - env:
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: example
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: root
+          image: ' '
+          name: mongo-db
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodata
+      restartPolicy: Always
+      volumes:
+        - name: mongodata
+          persistentVolumeClaim:
+            claimName: mongodata
+  test: false
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - mongo-db
+        from:
+          kind: ImageStreamTag
+          name: mongo-db:latest
+      type: ImageChange
+status:
+  availableReplicas: 0
+  latestVersion: 0
+  observedGeneration: 0
+  replicas: 0
+  unavailableReplicas: 0
+  updatedReplicas: 0

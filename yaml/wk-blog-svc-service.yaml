@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: wk-blog-svc
+  name: wk-blog-svc
+  namespace: default
+spec:
+  ports:
+    - name: "10082"
+      port: 10082
+      targetPort: 80
+  selector:
+    io.kompose.service: wk-blog-svc
+status:
+  loadBalancer: {}

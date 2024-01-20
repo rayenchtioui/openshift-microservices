@@ -1,0 +1,48 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: wk-auth-svc
+  name: wk-auth-svc
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: wk-auth-svc
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.network/openshift-microservices-wk-net: "true"
+        io.kompose.service: wk-auth-svc
+    spec:
+      containers:
+        - image: ' '
+          name: wk-auth-svc
+          ports:
+            - containerPort: 80
+              hostPort: 10084
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - wk-auth-svc
+        from:
+          kind: ImageStreamTag
+          name: wk-auth-svc:latest
+      type: ImageChange
+status:
+  availableReplicas: 0
+  latestVersion: 0
+  observedGeneration: 0
+  replicas: 0
+  unavailableReplicas: 0
+  updatedReplicas: 0

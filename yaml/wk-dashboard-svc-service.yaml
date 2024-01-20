@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: wk-dashboard-svc
+  name: wk-dashboard-svc
+  namespace: default
+spec:
+  ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 80
+  selector:
+    io.kompose.service: wk-dashboard-svc
+status:
+  loadBalancer: {}

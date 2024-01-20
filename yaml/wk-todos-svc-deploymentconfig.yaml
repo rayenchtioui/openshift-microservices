@@ -1,0 +1,51 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: wk-todos-svc
+  name: wk-todos-svc
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    io.kompose.service: wk-todos-svc
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.network/openshift-microservices-wk-net: "true"
+        io.kompose.service: wk-todos-svc
+    spec:
+      containers:
+        - env:
+            - name: ConnectionStrings__TodosDbConnStr
+              value: Host=postgres-db;Port=5432;Database=postgres;Username=postgres;Password=password
+          image: ' '
+          name: wk-todos-svc
+          ports:
+            - containerPort: 80
+              hostPort: 10080
+              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+  test: false
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - wk-todos-svc
+        from:
+          kind: ImageStreamTag
+          name: wk-todos-svc:latest
+      type: ImageChange
+status:
+  availableReplicas: 0
+  latestVersion: 0
+  observedGeneration: 0
+  replicas: 0
+  unavailableReplicas: 0
+  updatedReplicas: 0
